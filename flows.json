@@ -1,0 +1,461 @@
+[
+    {
+        "id": "1405e06709736736",
+        "type": "tab",
+        "label": "UI Dashboard",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b260847326c8b7e4",
+        "type": "ui_form",
+        "z": "1405e06709736736",
+        "name": "",
+        "label": "Blog post form",
+        "group": "b02ce5fcdae9198a",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Name",
+                "value": "sender",
+                "type": "text",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Post",
+                "value": "context",
+                "type": "multiline",
+                "required": true,
+                "rows": 3
+            }
+        ],
+        "formValue": {
+            "sender": "",
+            "context": ""
+        },
+        "payload": "",
+        "submit": "submit",
+        "cancel": "cancel",
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "x": 380,
+        "y": 80,
+        "wires": [
+            [
+                "e194e61282e6cafa"
+            ]
+        ]
+    },
+    {
+        "id": "e194e61282e6cafa",
+        "type": "function",
+        "z": "1405e06709736736",
+        "name": "Add new post to blogList",
+        "func": "const blogList = global.get('blogList') || []\nblogList.push(msg.payload)\nglobal.set('blogList', blogList)\nmsg.payload = blogList\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 80,
+        "wires": [
+            [
+                "2b5095b55a80c496",
+                "e6ac3383bcf90119"
+            ]
+        ]
+    },
+    {
+        "id": "2b5095b55a80c496",
+        "type": "debug",
+        "z": "1405e06709736736",
+        "name": "debug 31",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1180,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "443a36fb5bcc3e4c",
+        "type": "ui_list",
+        "z": "1405e06709736736",
+        "group": "675cb925949a0a62",
+        "name": "",
+        "order": 3,
+        "width": "10",
+        "height": "15",
+        "lineType": "one",
+        "actionType": "none",
+        "allowHTML": false,
+        "outputs": 0,
+        "topic": "",
+        "x": 1190,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "e6ac3383bcf90119",
+        "type": "function",
+        "z": "1405e06709736736",
+        "name": "Convert to list format",
+        "func": "const itemListFormat = msg.payload.map(blogObject => {\n    return { title: `${blogObject.sender}: ${blogObject.context}`}\n})\nmsg.payload = itemListFormat\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 180,
+        "wires": [
+            [
+                "443a36fb5bcc3e4c"
+            ]
+        ]
+    },
+    {
+        "id": "74ff7972f92eae4e",
+        "type": "inject",
+        "z": "1405e06709736736",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "blogList",
+        "payloadType": "global",
+        "x": 400,
+        "y": 180,
+        "wires": [
+            [
+                "e6ac3383bcf90119"
+            ]
+        ]
+    },
+    {
+        "id": "9706cf31a6424d96",
+        "type": "inject",
+        "z": "1405e06709736736",
+        "name": "Restart blog list to Initial blog list",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[{\"sender\":\"Jennie\",\"context\":\"First blog post\"}]",
+        "payloadType": "json",
+        "x": 310,
+        "y": 340,
+        "wires": [
+            [
+                "7eaf4f3c5196f437",
+                "e6ac3383bcf90119"
+            ]
+        ]
+    },
+    {
+        "id": "76ede0ae6c7f040e",
+        "type": "debug",
+        "z": "1405e06709736736",
+        "name": "debug 32",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1200,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "7eaf4f3c5196f437",
+        "type": "change",
+        "z": "1405e06709736736",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "blogList",
+                "pt": "global",
+                "to": "blogList",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 630,
+        "y": 340,
+        "wires": [
+            [
+                "76ede0ae6c7f040e",
+                "e6ac3383bcf90119"
+            ]
+        ]
+    },
+    {
+        "id": "d0fc727ff039347d",
+        "type": "function",
+        "z": "1405e06709736736",
+        "name": "Filter",
+        "func": "const blogList = global.get('blogList') || []\nif (msg.payload === \"\") {\n    msg.payload = blogList\n    return msg\n}\nconst filteredBlogs = blogList.filter(blog => {\n    if (blog.sender === msg.payload) {\n        return blogList\n    }\n})\nflow.set('filteredBlogs', filteredBlogs)\nmsg.payload = filteredBlogs\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 560,
+        "wires": [
+            [
+                "e6ac3383bcf90119",
+                "dc396404b1548895"
+            ]
+        ]
+    },
+    {
+        "id": "2dc540df8f160534",
+        "type": "ui_text_input",
+        "z": "1405e06709736736",
+        "name": "",
+        "label": "Search",
+        "tooltip": "Search for a name of a sender",
+        "group": "675cb925949a0a62",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": 300,
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 260,
+        "y": 560,
+        "wires": [
+            [
+                "d0fc727ff039347d"
+            ]
+        ]
+    },
+    {
+        "id": "dc396404b1548895",
+        "type": "debug",
+        "z": "1405e06709736736",
+        "name": "debug 33",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1220,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "e39252c6ffb3e72c",
+        "type": "ui_dropdown",
+        "z": "1405e06709736736",
+        "name": "",
+        "label": "",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "675cb925949a0a62",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "x": 720,
+        "y": 680,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9068b42024c2784c",
+        "type": "inject",
+        "z": "1405e06709736736",
+        "name": "",
+        "props": [
+            {
+                "p": "options",
+                "v": "hello my name is jennie",
+                "vt": "str"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 210,
+        "y": 780,
+        "wires": [
+            [
+                "38ce9672cb0cf55d"
+            ]
+        ]
+    },
+    {
+        "id": "e98c46f6aab0d333",
+        "type": "http request",
+        "z": "1405e06709736736",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://translation.googleapis.com/language/translate/v2",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "basic",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Authorization",
+                "keyValue": "",
+                "valueType": "other",
+                "valueValue": "AIzaSyDyoM2UmGeD8nCjH55jACzBV1vDmBauiBE"
+            }
+        ],
+        "x": 430,
+        "y": 740,
+        "wires": [
+            [
+                "a74c1bba28b3ec45"
+            ]
+        ]
+    },
+    {
+        "id": "a74c1bba28b3ec45",
+        "type": "debug",
+        "z": "1405e06709736736",
+        "name": "debug 34",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "0394d32c381c2494",
+        "type": "http request",
+        "z": "1405e06709736736",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": false,
+        "url": "",
+        "persist": false,
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 430,
+        "y": 740,
+        "wires": [
+            [
+                "e39252c6ffb3e72c"
+            ]
+        ]
+    },
+    {
+        "id": "38ce9672cb0cf55d",
+        "type": "google-translate",
+        "z": "1405e06709736736",
+        "name": "",
+        "to": "iw",
+        "x": 700,
+        "y": 780,
+        "wires": [
+            [
+                "a74c1bba28b3ec45"
+            ]
+        ]
+    },
+    {
+        "id": "b02ce5fcdae9198a",
+        "type": "ui_group",
+        "name": "Write post",
+        "tab": "8d51269c47431370",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "675cb925949a0a62",
+        "type": "ui_group",
+        "name": "Show posts",
+        "tab": "8d51269c47431370",
+        "order": 1,
+        "disp": true,
+        "width": "10",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "8d51269c47431370",
+        "type": "ui_tab",
+        "name": "Blog dashboard",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    }
+]
